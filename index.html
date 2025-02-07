@@ -1,22 +1,34 @@
 <!DOCTYPE html>
-<div id="container"></div>
-<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-<script type="module">
-const spec = {
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vega-Lite Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+<body>
+
+    <div id="container"></div>
+
+    <script type="module">
+        const spec = {
             "data": {
-                "url": "penglings.csv",
+                "url": "penglings.csv",  // Reference the CSV file
                 "format": {"type": "csv"}
             },
-            "mark": "point",
+            "mark": "point",  // Scatter plot
             "encoding": {
+                "size": {"field": "bill_length_mm", "type": "quantitative"},
                 "x": {"field": "flipper_length_mm", "type": "quantitative"},
                 "y": {"field": "body_mass_g", "type": "quantitative"},
                 "color": {"field": "species", "type": "nominal"}
             }
         };
 
-vegaEmbed("#container", spec);
+        vegaEmbed("#container", spec).catch(console.error);
+    </script>
 
-</script>
+</body>
+</html>
