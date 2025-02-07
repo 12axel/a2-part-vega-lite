@@ -34,7 +34,7 @@
                 "x": {"field": "flipper_length_mm", "type": "quantitative", "scale": {"domain": [170, 235]}, "title": "Flipper Length (mm)"},
                 "y": {"field": "body_mass_g", "type": "quantitative", "scale": {"domain": [2500, 6500]}, "title": "Body Mass (g)"},
                 "color": {"field": "species", "type": "nominal", "scale": {"range": ["red", "darkgreen", "purple"]}},
-                "opacity": {"value": 0.5},
+                "opacity": {"condition": {"param": "industry", "value": 0.5}, "value": 0},
                 "tooltip": [
                     {"field": "species", "type": "nominal"},
                     {"field": "bill_length_mm", "type": "quantitative"},
