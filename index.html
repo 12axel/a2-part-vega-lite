@@ -14,11 +14,11 @@
                 "url": "penglings.csv",
                 "format": {"type": "csv"}
             },
-            "mark": "point",
+            "mark": "circle",
             "encoding": {
-                "size": {"field": "bill_length_mm", "type": "quantitative"},
-                "x": {"field": "flipper_length_mm", "type": "quantitative"},
-                "y": {"field": "body_mass_g", "type": "quantitative"},
+                "size": {"field": "bill_length_mm", "type": "quantitative", "scale": {"domain": [30, 60]}},
+                "x": {"field": "flipper_length_mm", "type": "quantitative", "scale": {"domain": [170, 235]}, "title": "Flipper Length (mm)"},
+                "y": {"field": "body_mass_g", "type": "quantitative", "scale": {"domain": [2500, 6500]}, "title": "Body Mass (g)"},
                 "color": {"field": "species", "type": "nominal"}
             }
         };
