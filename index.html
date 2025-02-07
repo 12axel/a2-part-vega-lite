@@ -5,17 +5,15 @@
 <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 <script type="module">
 const spec = {
-
-            "description": "A scatter plot using local CSV data",
             "data": {
                 "url": "penglings.csv",
                 "format": {"type": "csv"}
             },
             "mark": "point",
             "encoding": {
-                "x": {"field": "Variable1", "type": "quantitative"},
-                "y": {"field": "Variable2", "type": "quantitative"},
-                "color": {"field": "Category", "type": "nominal"}
+                "x": {"field": "flipper_length_mm", "type": "quantitative"},
+                "y": {"field": "body_mass_g", "type": "quantitative"},
+                "color": {"field": "species", "type": "nominal"}
             }
         };
 
