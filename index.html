@@ -12,11 +12,18 @@
         const spec = {
             "width": 400,
             "height": 400,
-            "selection": {
-                "grid": {
-                    "type": "interval", "bind": "scales"
+            "params": [
+                {
+                    "name": "interactive_grid",
+                    "select": {"type": "interval"}, 
+                    "bind": "scales"
+                },
+                {
+                    "name": "species_selection",
+                    "select": {"type": "point", "fields": ["species"]},  
+                    "bind": "legend"
                 }
-            },
+            ],
             "data": {
                 "url": "penglings.csv",
                 "format": {"type": "csv"}
