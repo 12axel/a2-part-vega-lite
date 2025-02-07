@@ -1,7 +1,24 @@
 <!DOCTYPE html>
 <div id="container"></div>
-<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 <script type="module">
+const spec = {
 
+            "description": "A scatter plot using local CSV data",
+            "data": {
+                "url": "penglings.csv",
+                "format": {"type": "csv"}
+            },
+            "mark": "point",
+            "encoding": {
+                "x": {"field": "Variable1", "type": "quantitative"},
+                "y": {"field": "Variable2", "type": "quantitative"},
+                "color": {"field": "Category", "type": "nominal"}
+            }
+        };
+
+vegaEmbed("#container", spec);
 
 </script>
