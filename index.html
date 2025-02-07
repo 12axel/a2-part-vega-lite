@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<div id="container"></div>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script type="module">
+
+//IMPORTANT: As I was working through this project with these tools, I used AI tools like 
+//ChatGPT and copilot as well as the websites "https://d3-graph-gallery.com/graph/scatter_basic.html" 
+//to help debug issues in my code, fulfill the gaps of knowledge I had regaring how to 
+//program using d3.js, and figure out how to use d3.js to figure out how to draw a basic
+//scatter plot. Additionaly, I also used my code from the previous project in order to reference
+//some of the relevant d3.js functions I needed for this project.
+
+// set the dimensions and margins of the graph
+var margin = {top: 30, right: 30, bottom: 50, left: 60},
+    width = 460 - margin.left - margin.right,
+    height = 420 - margin.top - margin.bottom;
+
+var svg = d3.select("#container")
+  .append("svg")
+    .attr("width", 1425)
+    .attr("height", 700)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+console.log("SVG Width:", svg.attr("width"));
+console.log("SVG Height:", svg.attr("height"));
+
+//Read the data
+d3.csv("penglings.csv").then(function(data) {
+
+  var color = d3.scaleOrdinal()
+    .domain(["Adelie", "Gentoo", "Chinstrap"])
+    .range([ "red", "purple", "darkgreen"])
+
+  var z = d3.scaleLinear()
+    .domain([30, 60])
+    .range([ 4, 9]);
+
+  // Add X axis
+  var x = d3.scaleLinear()
+    .domain([170, 235])
+    .range([ 0, width ]);
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
+
+  // Add Y axis
+  var y = d3.scaleLinear()
+    .domain([2000, 6500])
+    .range([ height, 0]);
+  svg.append("g")
+    .call(d3.axisLeft(y));
+    
+  // Add X axis label
+  svg.append("text")
+    .attr("text-anchor", "middle")
+    .attr("x", width / 2)
+    .attr("y", height + margin.top + 10)
+    .text("Flipper Length (mm)");
+
+  // Add Y axis label
+  svg.append("text")
+    .attr("text-anchor", "middle")
+    .attr("transform", "rotate(-90)")
+    .attr("y", -margin.left + 20)
+    .attr("x", -height / 2)
+    .text("Body Mass (g)")
+
+  svg.append("g")
+    .attr("class", "grid")
+    .call(d3.axisLeft(y)
+      .tickSize(-width)
+      .tickFormat("")
+    )
+
+  svg.append("g")
+    .attr("class", "grid")
+    .call(d3.axisBottom(x)
+      .tickSize(height)
+      .tickFormat("")
+    )
+
+console.log("vertical lines called")
+
+  // Add dots
+  svg.append('g')
+    .selectAll("circle")
+    .data(data)
+    .enter()
+    .append("circle")
+      .attr("cx", function (d) {return x(d.flipper_length_mm); } )
+      .attr("cy", function (d) {return y(d.body_mass_g); } )
+      .attr("r", function (d) { return z(d.bill_length_mm); } )
+      .style("fill", function (d) { return color(d.species); } )
+      .style("opacity", 0.6)
+      .on("click", function(event, d) {
+        const currentOpacity = d3.select(this).style("opacity");
+
+        console.log("We got here 123!")
+
+        if(currentOpacity == 0) {
+          return;
+        }
+
+        svg.selectAll(".dot-label-Adelie").remove();
+        svg.selectAll(".dot-label-Gentoo").remove();
+        svg.selectAll(".dot-label-Chinstrap").remove();
+
+        svg.selectAll("circle")
+          .filter(function(e) { return  d3.select(this).style("opacity") != 0; })
+          .transition()
+          .duration(1000)
+          .attr("r", function (d) { return z(d.bill_length_mm); } )
+          .style("opacity", 0.6)
+
+        d3.select(this).raise();
+
+        d3.select(this)
+          .transition()
+          .duration(1000)
+          .attr("r", function (d) { return z(d3.select(this).datum().bill_length_mm) + 40; } )
+          .style("opacity", 1)
+          .on("end", function() {
+            svg.append("text")
+              .attr("class", "dot-label-" + d.species)
+              .attr("x", x(d.flipper_length_mm))
+              .attr("y", y(d.body_mass_g) - 20)
+              .text(d.species)
+              .style("font-size", 9)
+              .style("fill", "white")
+              .style("text-anchor", "middle")
+
+            console.log("We got here 13!")
+
+            svg.append("text")
+              .attr("class", "dot-label-" + d.species)
+              .attr("x", x(d.flipper_length_mm))
+              .attr("y", y(d.body_mass_g) - 10 )
+              .text(`Flipper Length: ${d.flipper_length_mm}mm`)
+              .style("font-size", 9)
+              .style("fill", "white")
+              .style("text-anchor", "middle")
+
+            svg.append("text")
+              .attr("class", "dot-label-" + d.species)
+              .attr("x", x(d.flipper_length_mm))
+              .attr("y", y(d.body_mass_g))
+              .text(`Body Mass: ${d.body_mass_g}g`)
+              .style("font-size", 9)
+              .style("fill", "white")
+              .style("text-anchor", "middle")
+
+            svg.append("text")
+              .attr("class", "dot-label-" + d.species)
+              .attr("x", x(d.flipper_length_mm))
+              .attr("y", y(d.body_mass_g) + 10)
+              .text(`Bill Length: ${d.bill_length_mm}mm`)
+              .style("font-size", 9)
+              .style("fill", "white")
+              .style("text-anchor", "middle")
+
+            console.log("We got here!")
+          })
+      })
+
+  var speciesVisibility = {
+    "Adelie": true,
+    "Gentoo": true,
+    "Chinstrap": true
+  }
+
+  var legend = svg.append("g")
+    .attr("transform", "translate(" + (width  + 30) + ", 0)" )
+
+  var legendItems = color.domain()
+
+  legend.append("text")
+    .attr("x", 0)
+    .attr("y", 10)
+    .text("Species legend:")
+    .style("font-size", 14)
+
+  legendItems.forEach(function(d, i) {
+
+    legend.append("rect")
+      .attr("x", 0)
+      .attr("y", (i * 20) + 20)
+      .attr("width", 10)
+      .attr("height", 10)
+      .style("fill", color(d))
+      .on("click", function() {
+
+        svg.selectAll(".dot-label-" + d).remove();
+        
+        console.log("Legend Clicked 5!")
+        speciesVisibility[d] = !speciesVisibility[d]
+
+        console.log(speciesVisibility[d]);
+
+        svg.selectAll("circle")
+          .filter(function(e) { return e.species == d; })
+          .transition()
+          .duration(1000)
+          .attr("r", function (e) { return z(e.bill_length_mm); } )
+          .style("opacity", speciesVisibility[d] ? 0.6 : 0)
+      })
+
+    legend.append("text")
+      .attr("x", 20)
+      .attr("y", i * 20 + 10 + 20)
+      .text(d)
+      .style("font-size", 12)
+  });
+
+})
+</script>
